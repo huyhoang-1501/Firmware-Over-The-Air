@@ -1,0 +1,2 @@
+../Src/SCB.c:12:6:MSCB_voidSystemPrioritySet	1
+../Src/SCB.c:17:6:Reset_system	1

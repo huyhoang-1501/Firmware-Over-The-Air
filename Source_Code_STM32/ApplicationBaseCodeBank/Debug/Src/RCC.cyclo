@@ -1,0 +1,7 @@
+../Src/RCC.c:19:6:MRCC_Init	2
+../Src/RCC.c:98:4:MRCC_CheckReady	6
+../Src/RCC.c:130:6:MRCC_voidSetClkSource	4
+../Src/RCC.c:151:6:MRCC_voidSetClkStatus	16
+../Src/RCC.c:212:6:MRCC_SetBusesPreScalers	4
+../Src/RCC.c:247:6:MRCC_SetPLLConfiguration	1
+../Src/RCC.c:267:6:MRCC_voidSetPeripheralClock	11

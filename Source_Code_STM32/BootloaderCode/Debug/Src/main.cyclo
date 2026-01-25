@@ -1,0 +1,3 @@
+../Src/main.c:18:6:JUMP_TO_BANK1	1
+../Src/main.c:28:6:JUMP_TO_BANK2	1
+../Src/main.c:40:6:main	8

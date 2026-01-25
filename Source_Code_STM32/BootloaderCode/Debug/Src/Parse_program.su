@@ -1,0 +1,5 @@
+../Src/Parse_program.c:15:4:AsciToHex	24	static
+../Src/Parse_program.c:32:6:ParseData	32	static
+../Src/Parse_program.c:67:6:ParseUpperAddress	24	static
+../Src/Parse_program.c:82:6:Parser_voidParseRecord	16	static
+../Src/Parse_program.c:94:4:BootLoader_CheckSum	32	static

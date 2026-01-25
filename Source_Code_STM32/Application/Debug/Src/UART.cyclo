@@ -1,0 +1,4 @@
+../Src/UART.c:25:6:MUSART_voidInit	1
+../Src/UART.c:86:6:MUSART_voidTransmit	2
+../Src/UART.c:100:6:MUSART_voidSendString	3
+../Src/UART.c:120:4:MUSART_u8Recieve	2

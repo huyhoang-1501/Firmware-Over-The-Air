@@ -1,0 +1,4 @@
+../Src/FPEC_program.c:10:6:FPEC_voidEraseBank1	16	static
+../Src/FPEC_program.c:20:6:FPEC_voidEraseBank2	16	static
+../Src/FPEC_program.c:30:6:FPEC_voidFlashPageErase	16	static
+../Src/FPEC_program.c:59:6:FPEC_voidFlashWrite	32	static

@@ -1,0 +1,7 @@
+../Src/RCC.c:19:6:MRCC_Init	16	static
+../Src/RCC.c:98:4:MRCC_CheckReady	24	static
+../Src/RCC.c:130:6:MRCC_voidSetClkSource	16	static
+../Src/RCC.c:151:6:MRCC_voidSetClkStatus	16	static
+../Src/RCC.c:212:6:MRCC_SetBusesPreScalers	16	static
+../Src/RCC.c:247:6:MRCC_SetPLLConfiguration	16	static
+../Src/RCC.c:267:6:MRCC_voidSetPeripheralClock	16	static

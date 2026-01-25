@@ -1,0 +1,4 @@
+../Src/GPIO.c:18:6:MGPIO_voidSetPinDirection	24	static
+../Src/GPIO.c:126:13:MGPIO_voidSetPinValue	24	static
+../Src/GPIO.c:197:13:MGPIO_voidGetPinValue	24	static
+../Src/GPIO.c:225:6:MGPIO_voidLockPin	24	static

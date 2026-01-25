@@ -1,0 +1,44 @@
+Requirement:
+python3 \
+python3-venv \
+python3-pip \
+python3-tk \
+python3-serial \
+libffi-dev \
+libssl-dev
+
+cd ~/Desktop/Update_Script_On_Raspberry_Pi
+python3 -m venv venv
+source venv/bin/activate
+
+pip install --upgrade pip setuptools wheel
+pip install pyrebase4 pyserial
+
+Run this command:
+python - << 'EOF'
+import pyrebase
+import serial
+import tkinter
+print("Environment OK")
+EOF
+
+If you see: Emviroment OK ---> Setuo is successfull.
+
+Serial Port Permission:
+
+sudo usermod -aG dialout pi
+sudo reboot
+
+After reboot:
+ls -l /dev/ttyS0
+
+---> If your STM32 appears as /dev/ttyUSB0, update the code accordingly.
+
+
+Run the FOTA project on Raspberry Pi 4B:
+Activate Env:
+
+cd ~/Desktop/FOTA/Source Code/Update_Script_On_Raspberry_Pi
+source venv/bin/activate
+
+python firebase_Get_Update_Script.py

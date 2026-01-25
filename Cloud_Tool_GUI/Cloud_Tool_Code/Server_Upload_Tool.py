@@ -21,7 +21,7 @@ config = {
     "authDomain": "firmwareovertheair-b8a90.firebaseapp.com",
     "databaseURL": "https://firmwareovertheair-b8a90-default-rtdb.firebaseio.com",
     "projectId": "firmwareovertheair-b8a90",
-    "storageBucket": "",   # chỉ để pyrebase khỏi lỗi, KHÔNG dùng Storage
+    "storageBucket": "",   
 }
 
 Firebase = pyrebase.initialize_app(config)

@@ -6,27 +6,26 @@ import requests
 import os
 
 # ============================= #
-#  Cấu hình đường dẫn          #
+#  Cau hinh duong dan           #
 # ============================= #
-BASE_DIR = "/home/pi/Desktop/FOTA/Source Code/Update_Script_On_Raspberry_Pi"
+
+BASE_DIR = "/home/pi/Desktop/Firmware-Over-The-Air/Script_On_Raspberry_Pi"
 VERSION_FILE = os.path.join(BASE_DIR, "version.txt")
 UPDATE_HEX_PATH = os.path.join(BASE_DIR, "Update.hex")
 GUI_SCRIPT = os.path.join(BASE_DIR, "GUI_Update_Notification.py")
-
-# Đọc version hiện tại lưu trên Pi
+# Äá»c version hiá»‡n táº¡i lÆ°u trÃªn Pi
 with open(VERSION_FILE, "r") as f:
     version_check = int(f.read().strip())
 
 # ============================= #
-#  Firebase config (CHỈ DB)    #
-#  (giống bên PC đang dùng)    #
+#  Firebase config              #
 # ============================= #
 Config = {
     "apiKey": "AIzaSyADvax54nso0DOMKLgT35pfedVbWUZU9YE",
     "authDomain": "firmwareovertheair-b8a90.firebaseapp.com",
     "databaseURL": "https://firmwareovertheair-b8a90-default-rtdb.firebaseio.com",
     "projectId": "firmwareovertheair-b8a90",
-    # KHÔNG cần storageBucket, serviceAccount ở đây
+    "storageBucket": "",
 }
 
 firebase = pyrebase.initialize_app(Config)
@@ -34,7 +33,7 @@ database = firebase.database()
 
 while True:
     try:
-        # Đọc toàn bộ root; GUI trên PC đang set {"version": x, "url": "..."}
+        
         data = database.get().val()
         if not data:
             print("No data in DB")
@@ -55,21 +54,21 @@ while True:
         if version_check != current_version:
             print("New firmware detected, downloading from:", update_url)
 
-            # Tải file HEX từ GitHub RAW URL
+            # TTai file hex len 
             r = requests.get(update_url, timeout=30)
             r.raise_for_status()
 
             with open(UPDATE_HEX_PATH, "wb") as f:
                 f.write(r.content)
 
-            # Cập nhật version.txt
+            # Cap nhat version.txt
             with open(VERSION_FILE, "w") as f:
                 f.write(str(current_version))
 
             version_check = current_version
 
             print("Download done, launching GUI_Update_Notification.py")
-            # Chạy GUI để cho phép user quyết định update
+            # Cap nhat version
             exec(open(GUI_SCRIPT).read())
 
     except Exception as e:

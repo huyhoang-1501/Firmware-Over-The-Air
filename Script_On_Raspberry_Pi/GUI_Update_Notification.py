@@ -8,20 +8,20 @@ import re
 import time
 
 # ============================= #
-#  Cấu hình đường dẫn / serial  #
+#  Cau hinh duong dan / serial  #
 # ============================= #
-BASE_DIR = "/home/pi/Desktop/FOTA/Source Code/Update_Script_On_Raspberry_Pi"
+BASE_DIR = "/home/pi/Desktop/Firmware-Over-The-Air/Script_On_Raspberry_Pi"
 UPDATE_HEX_PATH = os.path.join(BASE_DIR, "Update.hex")
 
 PORT = "/dev/ttyS0"
 BAUD_RATE = 9600
 
-# Đảm bảo tkinter chạy được khi remote
+
 if os.environ.get("DISPLAY", "") == "":
     os.environ.__setitem__("DISPLAY", ":0.0")
 
 # ============================= #
-#  Khởi tạo serial & flash()    #
+#  Khoi tao serial & flash()    #
 # ============================= #
 
 print("Opening serial port...")
@@ -32,7 +32,7 @@ string_pattern = b"."
 chunk = re.compile(string_pattern)
 
 def flash():
-    # Gửi toàn bộ file Update.hex sang STM32
+    # Gá»­i toÃ n bá»™ file Update.hex sang STM32
     with open(UPDATE_HEX_PATH, "rb") as file:
         for line in file:
             result = chunk.findall(line)
@@ -40,14 +40,14 @@ def flash():
                 ser.write(result[x])
             ser.write("\n".encode("utf-8"))
 
-            # Chờ MCU trả 'o' để gửi tiếp
+            # Chá» MCU tráº£ 'o' Ä‘á»ƒ gá»­i tiáº¿p
             while True:
                 data_rec = ser.read()
                 if data_rec.decode("utf-8") == "o":
                     break
 
 # ============================= #
-#  GUI thông báo update         #
+#  GUI thong bao update         #
 # ============================= #
 
 switch1 = int()
@@ -60,7 +60,7 @@ root.resizable(0, 0)
 Top = Toplevel()
 Top.withdraw()
 
-# Label trên main window
+# Label tren main window
 label_update = Label(
     root,
     text="New update is available, please select an action:",
@@ -68,7 +68,7 @@ label_update = Label(
 )
 label_update.grid(row=0, column=0, columnspan=2, pady=10)
 
-# Labels trên Top window
+# Labels tren top Window
 label_switch1 = Label(Top, text="Switch 1 must be off", font=("Arial", 15))
 label_switch1.grid(row=0, column=0, columnspan=2, pady=10)
 
@@ -83,7 +83,7 @@ label_update_finished = Label(
 )
 
 # ----------------------------- #
-#  Các hàm xử lý nút           #
+#  Cac ham xu ly nut            #
 # ----------------------------- #
 def Update():
     global Top, switch1
@@ -92,14 +92,14 @@ def Update():
     Top.geometry("500x400")
     root.withdraw()
 
-    # Gửi 'NEW' cho STM32
+    # Gá»­i 'NEW' cho STM32
     for c in "NEW":
         ser.write(c.encode("utf-8"))
         sleep(0.1)
 
     Top.update()
 
-    # Đọc chuỗi "Switch 1\n"
+    # Äá»c chuá»—i "Switch 1\n"
     string = ser.readline().decode("utf-8")
     print(string)
 
@@ -137,7 +137,7 @@ def Reset_Request_then_flash():
     Top.update()
     sleep(5)
     root.destroy()
-    # Sau khi xong, quay lại vòng lặp firebase_Get_Update_Script (script đó đang exec file này rồi)
+    # Sau khi xong, quay lai vong lap firebase_Get_Update_Script 
 
 # ----------------------------- #
 #  Buttons                      #

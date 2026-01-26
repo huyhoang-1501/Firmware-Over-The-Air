@@ -1,118 +1,136 @@
 #!/usr/bin/python3
 from time import sleep
 from tkinter import *
-import sys
-import os
 import serial
 import re
 import time
+import os
 
 # ============================= #
-#  Cau hinh duong dan / serial  #
+# Cấu hình serial & đường dẫn   #
 # ============================= #
 BASE_DIR = "/home/pi/Desktop/Firmware-Over-The-Air/Script_On_Raspberry_Pi"
 UPDATE_HEX_PATH = os.path.join(BASE_DIR, "Update.hex")
-
 PORT = "/dev/ttyS0"
-BAUD_RATE = 9600
-
+BAUD_RATE = 115200                  # Đã đổi lên 115200 cho ổn định
 
 if os.environ.get("DISPLAY", "") == "":
     os.environ.__setitem__("DISPLAY", ":0.0")
 
-# ============================= #
-#  Khoi tao serial & flash()    #
-# ============================= #
-
 print("Opening serial port...")
-ser = serial.Serial(PORT, BAUD_RATE)
-time.sleep(1)
+ser = serial.Serial(PORT, BAUD_RATE, timeout=1)
+time.sleep(2)                       # Chờ STM32 ổn định
 
-string_pattern = b"."
-chunk = re.compile(string_pattern)
-
+# ============================= #
+# Hàm flash hex                 #
+# ============================= #
 def flash():
-    # Gá»­i toÃ n bá»™ file Update.hex sang STM32
     with open(UPDATE_HEX_PATH, "rb") as file:
         for line in file:
-            result = chunk.findall(line)
-            for x in range(len(result)):
-                ser.write(result[x])
-            ser.write("\n".encode("utf-8"))
-
-            # Chá» MCU tráº£ 'o' Ä‘á»ƒ gá»­i tiáº¿p
+            for byte in line:
+                ser.write(bytes([byte]))
+            ser.write(b"\n")
             while True:
-                data_rec = ser.read()
-                if data_rec.decode("utf-8") == "o":
+                ack = ser.read(1)
+                if ack == b"o":
                     break
 
 # ============================= #
-#  GUI thong bao update         #
+# GUI                           #
 # ============================= #
-
-switch1 = int()
-
 root = Tk()
-root.title("New Firmware Update")
-root.geometry("450x200")
-root.resizable(0, 0)
+root.title("Firmware Update")
+root.geometry("560x360")
+root.resizable(False, False)
+root.configure(bg="#f4f6f9")
 
-Top = Toplevel()
+# Main frame
+main = Frame(root, bg="#f4f6f9")
+main.pack(expand=True, fill=BOTH, padx=30, pady=30)
+
+# Title
+Label(main, text="New Firmware Available", font=("Segoe UI", 20, "bold"), 
+      bg="#f4f6f9", fg="#1a73e8").pack(pady=(0,15))
+
+Label(main, text="The new version is ready. Please select an action:",
+      font=("Segoe UI", 11), bg="#f4f6f9", fg="#555").pack(pady=(0,30))
+
+# Buttons frame
+btn_frame = Frame(main, bg="#f4f6f9")
+btn_frame.pack(pady=20)
+
+Button(btn_frame, text="Update Now", font=("Segoe UI", 12, "bold"),
+       bg="#1a73e8", fg="white", activebackground="#1557b0",
+       width=18, height=2, relief="flat", command=lambda: Update()).pack(side=LEFT, padx=15)
+
+Button(btn_frame, text="Snooze 10s", font=("Segoe UI", 12, "bold"),
+       bg="#fbbc05", fg="black", activebackground="#e8a600",
+       width=18, height=2, relief="flat", command=lambda: Snooze()).pack(side=LEFT, padx=15)
+
+# ============================= #
+# Top window - Switch check     #
+# ============================= #
+Top = Toplevel(root)
+Top.title("Update Confirmation")
+Top.geometry("560x420")
+Top.resizable(False, False)
+Top.configure(bg="#ffffff")
 Top.withdraw()
 
-# Label tren main window
-label_update = Label(
-    root,
-    text="New update is available, please select an action:",
-    font=("Arial", 15),
-)
-label_update.grid(row=0, column=0, columnspan=2, pady=10)
+top_main = Frame(Top, bg="#ffffff")
+top_main.pack(expand=True, fill=BOTH, padx=40, pady=40)
 
-# Labels tren top Window
-label_switch1 = Label(Top, text="Switch 1 must be off", font=("Arial", 15))
-label_switch1.grid(row=0, column=0, columnspan=2, pady=10)
+Label(top_main, text="Switch 1 must be OFF", font=("Segoe UI", 18, "bold"),
+      bg="#ffffff", fg="#d93025").pack(pady=(0,30))
 
-label_OK = Label(Top, text="OK", font=("Arial", 15))
+label_OK = Label(top_main, text="✓ Switch 1 off - Available update", 
+                 font=("Segoe UI", 14, "bold"), bg="#ffffff", fg="#34a853")
 
-label_update_in_progress = Label(
-    Top, text="Update in progress", font=("Arial", 15)
-)
+label_progress = Label(top_main, text="Loading firmware...", 
+                       font=("Segoe UI", 14, "bold"), bg="#ffffff", fg="#1a73e8")
 
-label_update_finished = Label(
-    Top, text="Update is done", font=("Arial", 15)
-)
+label_done = Label(top_main, text="Successfull !", 
+                   font=("Segoe UI", 18, "bold"), bg="#ffffff", fg="#34a853")
 
-# ----------------------------- #
-#  Cac ham xu ly nut            #
-# ----------------------------- #
+# Nút trong Top
+btn_container = Frame(top_main, bg="#ffffff")
+btn_container.pack(pady=30)
+
+bt_back = Button(btn_container, text="Back", font=("Segoe UI", 11, "bold"),
+                 bg="#ea4335", fg="white", width=15, height=2, relief="flat",
+                 command=lambda: back())
+
+bt_update_now = Button(btn_container, text="Proceed Update", font=("Segoe UI", 12, "bold"),
+                       bg="#34a853", fg="white", activebackground="#2e8b57",
+                       width=20, height=2, relief="flat", command=lambda: Reset_Request_then_flash())
+
+# ============================= #
+# Functions                     #
+# ============================= #
 def Update():
-    global Top, switch1
-
     Top.deiconify()
-    Top.geometry("500x400")
     root.withdraw()
+    ser.reset_input_buffer()
+    ser.write(b"NEW")
+    ser.flush()
+    time.sleep(0.3)
 
-    # Gá»­i 'NEW' cho STM32
-    for c in "NEW":
-        ser.write(c.encode("utf-8"))
-        sleep(0.1)
+    response = ser.readline().decode('utf-8', errors='ignore').strip()
+    print("STM32 says:", response)
 
-    Top.update()
-
-    # Äá»c chuá»—i "Switch 1\n"
-    string = ser.readline().decode("utf-8")
-    print(string)
-
-    if string == "Switch 1\n":
-        switch1 = ser.read()
-        print("switch1 =", switch1)
-
-        if switch1 == b"0":
-            label_OK.grid(row=1, column=0, pady=10)
-            bt_update_now.grid(row=5, column=0, pady=20)
+    if "Switch 1" in response:
+        switch1 = ser.read(1)
+        print("Switch1 value:", switch1)
+        if switch1 == b'0':
+            label_OK.pack(pady=20)
+            bt_update_now.pack(pady=15)
+            bt_back.pack(pady=10)
         else:
-            label_OK.grid_forget()
-            bt_update_now.grid_forget()
+            label_OK.pack_forget()
+            bt_update_now.pack_forget()
+            bt_back.pack(pady=20)
+    else:
+        bt_back.pack(pady=20)
 
 def Snooze():
     root.withdraw()
@@ -121,69 +139,25 @@ def Snooze():
 
 def back():
     Top.withdraw()
-    ser.write("B".encode("utf-8"))
+    ser.write(b"B")
     root.deiconify()
     ser.reset_input_buffer()
 
 def Reset_Request_then_flash():
-    ser.write("1".encode("utf-8"))
-    label_update_in_progress.grid(row=3, column=0, pady=10)
+    ser.write(b"1")
+    label_progress.pack(pady=30)
     bt_update_now.destroy()
     bt_back.destroy()
     Top.update()
-    sleep(5)
+    sleep(3)
     flash()
-    label_update_finished.grid(row=4, column=0, pady=10)
+    label_progress.pack_forget()
+    label_done.pack(pady=40)
     Top.update()
     sleep(5)
     root.destroy()
-    # Sau khi xong, quay lai vong lap firebase_Get_Update_Script 
 
-# ----------------------------- #
-#  Buttons                      #
-# ----------------------------- #
-bt_update = Button(
-    root,
-    text="Update now",
-    font="Arial 10 bold",
-    bg="lightyellow",
-    height=3,
-    width=15,
-    command=Update,
-)
-bt_update.grid(row=1, column=0, padx=10, pady=10)
-
-bt_snooze = Button(
-    root,
-    text="Snooze",
-    font="Arial 10 bold",
-    bg="light pink",
-    height=3,
-    width=15,
-    command=Snooze,
-)
-bt_snooze.grid(row=2, column=0, padx=10, pady=10)
-
-bt_back = Button(
-    Top,
-    text="Back",
-    font="Arial 10 bold",
-    bg="lightyellow",
-    height=3,
-    width=15,
-    command=back,
-)
-bt_back.grid(row=5, column=1, padx=10, pady=20)
-
-bt_update_now = Button(
-    Top,
-    text="Update now",
-    font="Arial 10 bold",
-    bg="lightyellow",
-    height=3,
-    width=15,
-    command=Reset_Request_then_flash,
-)
-
-Top.update()
+# ============================= #
+# Start GUI                     #
+# ============================= #
 root.mainloop()

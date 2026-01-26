@@ -28,7 +28,7 @@ Firebase = pyrebase.initialize_app(config)
 Database = Firebase.database()
 
 # =========================================================== #
-#  Browse file (chỉ để chọn HEX local cho dễ)                 #
+#  Browse file                                                #
 # =========================================================== #
 def Browse():
     filename = filedialog.askopenfilename(
@@ -75,7 +75,7 @@ def Upload():
         messagebox.showerror("Upload failed", str(e))
 
 # =========================================================== #
-#  Create GUI Window – 1053 x 677 (khớp với ảnh)              #
+#  Create GUI Window                                          #
 # =========================================================== #
 BG_WIDTH = 1053
 BG_HEIGHT = 677

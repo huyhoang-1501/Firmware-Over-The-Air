@@ -34,14 +34,14 @@ Once the update process concludes, the new application activates on the target S
    - Designed with Python and Tkinter.
    - Facilitates the upload of update files to the server.
 
-        ![GUI Image](assets/GUI_Desktop.png)
+        ![GUI Desktop Image](assets/GUI_Desktop.png)
 
 3. **Raspberry Pi**:
    - Automatically polls the database for updates.
    - Fetches and parses new hex files from the server when detected.
    - Guides users through the update process, including safety checks and update status.
 
-        ![GUI Image](assets/GUI_Desktop.png)
+        ![GUI RPI Image](assets/GUI_On_RaspPi4.png)
 
 4. **Application**:
    - Manages UART-based update commands and user switch input, requesting a system reset to return control to the Bootloader when a firmware update is required.

@@ -13,7 +13,7 @@ This project showcases a straightforward implementation of Firmware Over The Air
 
 Updates can be uploaded to a cloud server (Firebase). The Raspberry Pi, acting as the main Microcontroller Unit (MCU), listens to real-time database changes. Upon detecting a valid update, a GUI notifies the user about the available update, providing options to either initiate the update immediately or postpone it. If the user chooses to proceed, the Raspberry Pi transfers the new hex file to the target microcontroller (STM32F103C8T6) via UART. The progress and status of the update are reflected in the Raspberry Pi's GUI.
 
-Once the update process concludes, the new application activates on the target STMF10, and the GUI confirms the update's successful installation.
+Once the update process concludes, the new application activates on the target STM32F103C8T6, and the GUI confirms the update's successful installation.
 
 [**Demo Video**](https://www.youtube.com/watch?v=OATkTLVjR8Q)
 

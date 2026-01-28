@@ -45,16 +45,17 @@ Once the update process concludes, the new application activates on the target S
 
 4. **Application**:
    - Manages UART-based update commands and user switch input, requesting a system reset to return control to the Bootloader when a firmware update is required.
-        <img src="assets\App.png" width=40%>
+        <img src="assets\App.jpg" width=40%>
 5. **Bootloader**:
    - Responsible for memory management, featuring Bootloader (BL), Bank 1, and Bank 2 sections.
    - Manages update sequence, deciding between existing or new applications based on switch states and update availability.
-        <img src="assets\Boot.png" width=40%>
+        <img src="assets\Boot.jpg" width=40%>
 6. **Application (Update Handler)**:
     - Handles runtime communication with the update controller (Raspberry Pi) via UART.
     - Monitors user switch state and update commands to determine update requests.
     - Triggers a system reset to transfer execution back to the Bootloader when an update is requested.
     - Maintains normal application execution until a valid update condition is detected.
+        <img src="assets\Update.jpg" width=40%>
 
 <div align="center">
 
